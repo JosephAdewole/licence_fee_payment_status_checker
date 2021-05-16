@@ -4,6 +4,7 @@ import (
 	"log"
 	"mawakif/config"
 	"mawakif/internal/router"
+	"os"
 )
 
 func main() {
@@ -15,5 +16,6 @@ func main() {
 	}
 	myRouter := router.New(cfg)
 	myRouter.Route()
-	myRouter.Run(":3000")
+	port := ":" + os.Getenv("PORT")
+	myRouter.Run(port)
 }
