@@ -5,9 +5,10 @@
 /api/plate
 POST 
 {
-    car_image: []byte{},
+    plate_number: "45-TY-90",
     packing_space_id: 5674, 
     current_time: 23:00:45
+    is_empty: true/false
 }
 
 returns 
@@ -84,9 +85,22 @@ STATUS 200 OK
     }
 ]
 
-6. An endpoint that returns a list of packing space and their designation
+6. An endpoint that add and another that returns a list of packing space and their designation
 
 GET
+
+/api/space 
+
+returns
+[
+    {
+        id: 12,
+        designation: "The President"
+    }, 
+    ...
+]
+
+POST
 
 /api/space 
 
@@ -112,6 +126,9 @@ id, is_empty, plate_number, packing_space_id, created_at
 
 TABLE 3 -  packing_space
 id, designation
+
+TABLE 4 - config
+id, name, value
  
 
 note 3: has records of the different packing space that exists
