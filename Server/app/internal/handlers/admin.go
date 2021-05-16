@@ -20,7 +20,7 @@ type updateTicketDurationRequest struct {
 //UpdateTicketDuration updates the duration of tickets
 func UpdateTicketDuration(db *sql.DB, cfg config.CONFIG) func(c *gin.Context) {
 
-	configString, err := readfile(cfg)
+	configString, err := readFile(cfg)
 	if err != nil {
 		return func(c *gin.Context) {
 			httperror.Default(err).ReplyInternalServerError(c.Writer)
@@ -31,6 +31,7 @@ func UpdateTicketDuration(db *sql.DB, cfg config.CONFIG) func(c *gin.Context) {
 
 }
 
+//returns a handler func for updating ticket duration
 func updateTicketDurationHandler(configString string, cfg config.CONFIG) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var req updateTicketDurationRequest
@@ -50,9 +51,9 @@ func updateTicketDurationHandler(configString string, cfg config.CONFIG) func(c 
 	}
 }
 
-func readfile(cfg config.CONFIG) (string, error) {
+func readFile(cfg config.CONFIG) (string, error) {
 
-	fs, err := os.OpenFile("app.config", 2, 777)
+	fs, err := os.OpenFile(cfg.ConfigFileName, os.O_RDWR, 777)
 	if err != nil {
 		return "", err
 	}
@@ -67,7 +68,7 @@ func readfile(cfg config.CONFIG) (string, error) {
 }
 
 func writeFile(cfg config.CONFIG, content string) error {
-	fs, err := os.OpenFile("app.config", 2, 777)
+	fs, err := os.OpenFile(cfg.ConfigFileName, os.O_RDWR, 777)
 	if err != nil {
 		return err
 	}
