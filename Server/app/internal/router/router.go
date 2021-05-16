@@ -32,7 +32,7 @@ func (r router) Route() {
 	r.R.POST("api/plate", nil)
 	r.R.POST("/api/subcribers/add", nil)
 
-	r.R.PUT("/api/admin/ticket-duration", handlers.UpdateTicketDuration(r.CONFIG))
+	r.R.PUT("/api/admin/ticket-duration", handlers.UpdateTicketDurationHandler(r.DB))
 }
 
 //Run starts a listen and serve on a port

@@ -1,26 +1,24 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"mawakif/config"
+	"mawakif/internal/database"
 	"mawakif/pkg/httperror"
 	"mawakif/pkg/httpresp"
-	"os"
 	"strconv"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 )
 
 type updateTicketDurationRequest struct {
-	Duration int `json:"ticket_duration" validate:"required"`
+	TicketDuration int `json:"ticket_duration" validate:"required"`
 }
 
 func (u updateTicketDurationRequest) validateUpdateTicketDurationRequest() error {
-	if u.Duration == 0 {
+	if u.TicketDuration == 0 {
 		return errors.New("duration is required")
 	}
 
@@ -28,25 +26,11 @@ func (u updateTicketDurationRequest) validateUpdateTicketDurationRequest() error
 }
 
 func (u updateTicketDurationRequest) string() string {
-	return strconv.Itoa(u.Duration)
+	return strconv.Itoa(u.TicketDuration)
 }
 
-//UpdateTicketDuration updates the duration of tickets
-func UpdateTicketDuration(cfg config.CONFIG) func(c *gin.Context) {
-
-	configString, err := readFile(cfg)
-	if err != nil {
-		return func(c *gin.Context) {
-			httperror.Default(err).ReplyInternalServerError(c.Writer)
-		}
-	}
-
-	return updateTicketDurationHandler(configString, cfg)
-
-}
-
-//returns a handler func for updating ticket duration
-func updateTicketDurationHandler(configString string, cfg config.CONFIG) func(c *gin.Context) {
+//UpdateTicketDurationHandler returns a handler func for updating ticket duration
+func UpdateTicketDurationHandler(db *sql.DB) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var req updateTicketDurationRequest
 
@@ -55,49 +39,25 @@ func updateTicketDurationHandler(configString string, cfg config.CONFIG) func(c 
 			return
 		}
 
+		//validate request
 		if er := req.validateUpdateTicketDurationRequest(); er != nil {
 			httperror.Default(er).ReplyBadRequest(c.Writer)
 			return
 		}
 
-		newStr := strings.Replace(configString, cfg.TicketDuration, req.string(), -1)
-		if er := writeFile(cfg, newStr); er != nil {
-			httperror.Default(er).ReplyInternalServerError(c.Writer)
+		//update database
+		conf := database.Config{Name: "TICKET_DURATION", Value: req.string()}
+		if err := conf.Update(db); err == sql.ErrNoRows {
+			if er := conf.Add(db); er != nil {
+				httperror.Default(err).ReplyInternalServerError(c.Writer)
+				return
+			}
+		} else if err != nil {
+			httperror.Default(err).ReplyInternalServerError(c.Writer)
 			return
 		}
 
-		msg := fmt.Sprintf("ticket duration updated to %v hrs", req.Duration)
+		msg := fmt.Sprintf("%v updated to %v hrs", conf.Name, conf.Value)
 		httpresp.New(true, 200, msg, nil, nil).ReplyOK(c.Writer)
 	}
-}
-
-func readFile(cfg config.CONFIG) (string, error) {
-
-	fs, err := os.OpenFile(cfg.ConfigFileName, os.O_RDWR, 777)
-	if err != nil {
-		return "", err
-	}
-	defer fs.Close()
-
-	data, err := ioutil.ReadAll(fs)
-	if err != nil {
-		return "", err
-	}
-
-	return string(data), nil
-}
-
-func writeFile(cfg config.CONFIG, content string) error {
-	fs, err := os.OpenFile(cfg.ConfigFileName, os.O_RDWR, 777)
-	if err != nil {
-		return err
-	}
-	defer fs.Close()
-
-	_, er := fs.WriteString(content)
-	if er != nil {
-		return er
-	}
-
-	return nil
 }
