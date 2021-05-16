@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"mawakif/internal/router"
+)
 
 func main() {
-	fmt.Println("hi, I identify car plate number")
+
+	myRouter := router.New(nil)
+	myRouter.Route()
+	myRouter.Run(":3000")
 }
