@@ -25,12 +25,12 @@ func New(cfg config.CONFIG) router {
 //Route routes the different requests
 func (r router) Route() {
 	//starts a new router
-	r.R.GET("/api/subscribers", nil)
+	r.R.GET("/api/subscribers", handlers.GetAllSubscribersHandler(r.DB))
 	r.R.GET("/api/checks", nil)
 	r.R.GET("/api/space", nil)
 
 	r.R.POST("api/plate", nil)
-	r.R.POST("/api/subcribers/add", nil)
+	r.R.POST("/api/subcribers/add", handlers.AddUpdateSubscriberHandler(r.DB))
 
 	r.R.PUT("/api/admin/ticket-duration", handlers.UpdateTicketDurationHandler(r.DB))
 }

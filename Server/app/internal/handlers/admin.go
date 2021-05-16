@@ -34,6 +34,7 @@ func UpdateTicketDurationHandler(db *sql.DB) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var req updateTicketDurationRequest
 
+		//read request body
 		if er := json.NewDecoder(c.Request.Body).Decode(&req); er != nil {
 			httperror.Default(errors.Wrap(er, "unable to read request body")).ReplyBadRequest(c.Writer)
 			return
