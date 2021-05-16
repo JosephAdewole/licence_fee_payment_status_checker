@@ -13,6 +13,7 @@ type CONFIG struct {
 	PORT string `mapstructure:"PORT"`
 
 	TicketDuration string `mapstructure:"TICKET_DURATION"`
+	ConfigFileName string `mapstructure:"CONFIG_FILE_NAME"`
 }
 
 //LoadConfig reads configurations from app.env file

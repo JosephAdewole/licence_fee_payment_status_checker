@@ -2,6 +2,7 @@ package router
 
 import (
 	"database/sql"
+	"mawakif/config"
 	"mawakif/internal/handlers"
 
 	"github.com/gin-gonic/gin"
@@ -9,13 +10,16 @@ import (
 
 //Router is contains a handler type
 type router struct {
-	DB *sql.DB
-	R  *gin.Engine
+	DB     *sql.DB
+	R      *gin.Engine
+	CONFIG config.CONFIG
 }
 
 //New creates a new router instance
-func New(db *sql.DB) router {
-	return router{DB: db, R: gin.New()}
+func New(cfg config.CONFIG) router {
+	return router{DB: nil, //temperal
+		R:      gin.New(),
+		CONFIG: config.CONFIG{}} //config- temperal
 }
 
 //Route routes the different requests
@@ -28,7 +32,7 @@ func (r router) Route() {
 	r.R.POST("api/plate", nil)
 	r.R.POST("/api/subcribers/add", nil)
 
-	r.R.PUT("/api/admin/ticket-duration", handlers.UpdateTicketDuration(r.DB))
+	r.R.PUT("/api/admin/ticket-duration", handlers.UpdateTicketDuration(r.DB, r.CONFIG))
 }
 
 //Run starts a listen and serve on a port
