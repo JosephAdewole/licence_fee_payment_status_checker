@@ -1,6 +1,6 @@
 package database
 
-import "database/sql"
+import "github.com/jinzhu/gorm"
 
 //Config is a record of a configuration
 type Config struct {
@@ -10,11 +10,11 @@ type Config struct {
 }
 
 //Add adds a new config record to database
-func (c Config) Add(db *sql.DB) error {
+func (c Config) Add(db *gorm.DB) error {
 	return nil
 }
 
 //Update updates the record of a configuration in a database
-func (c Config) Update(db *sql.DB) error {
+func (c Config) Update(db *gorm.DB) error {
 	return nil
 }

@@ -1,8 +1,9 @@
 package database
 
 import (
-	"database/sql"
 	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 //Subscriber represents a packing space user, in this case a customer
@@ -15,13 +16,13 @@ type Subscriber struct {
 }
 
 //Add adds a new subcriber to database
-func (sub Subscriber) Add(db *sql.DB) error {
+func (sub Subscriber) Add(db *gorm.DB) error {
 
 	return nil
 }
 
 //GetAll returns a list of all subcribers from the database
-func (sub Subscriber) GetAll(db *sql.DB) ([]Subscriber, error) {
+func (sub Subscriber) GetAll(db *gorm.DB) ([]Subscriber, error) {
 
 	return nil, nil
 }

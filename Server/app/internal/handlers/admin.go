@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 )
 
@@ -30,7 +31,7 @@ func (u updateTicketDurationRequest) string() string {
 }
 
 //UpdateTicketDurationHandler returns a handler func for updating ticket duration
-func UpdateTicketDurationHandler(db *sql.DB) func(c *gin.Context) {
+func UpdateTicketDurationHandler(db *gorm.DB) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var req updateTicketDurationRequest
 

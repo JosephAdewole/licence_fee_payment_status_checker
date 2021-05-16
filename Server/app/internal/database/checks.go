@@ -1,8 +1,10 @@
 package database
 
 import (
-	"database/sql"
 	"time"
+
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 //Check is record of a check done by bot (rasp berry pi robot)
@@ -15,12 +17,12 @@ type Check struct {
 }
 
 //Add adds a new check record to database
-func (ck Check) Add(db *sql.DB) error {
+func (ck Check) Add(db *gorm.DB) error {
 	return nil
 }
 
 //GetAll returns all the checks done
-func (ck Check) GetAll(db *sql.DB) ([]Check, error) {
+func (ck Check) GetAll(db *gorm.DB) ([]Check, error) {
 
 	return nil, nil
 }

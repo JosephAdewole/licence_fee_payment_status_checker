@@ -1,16 +1,16 @@
 package router
 
 import (
-	"database/sql"
 	"mawakif/config"
 	"mawakif/internal/handlers"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 )
 
 //Router is contains a handler type
 type router struct {
-	DB     *sql.DB
+	DB     *gorm.DB
 	R      *gin.Engine
 	CONFIG config.CONFIG
 }
