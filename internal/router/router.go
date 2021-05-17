@@ -29,8 +29,9 @@ func (r router) Route() {
 	r.R.GET("/api/checks", handlers.GetAllChecksHandler(r.DB))
 	r.R.GET("/api/space", handlers.GetAllPackingSpaceHandler(r.DB))
 
-	r.R.POST("api/plate", handlers.AddPlateNumberHandler(r.DB))
+	r.R.POST("api/plate/add", handlers.AddPlateNumberHandler(r.DB))
 	r.R.POST("/api/subcribers/add", handlers.AddUpdateSubscriberHandler(r.DB))
+	r.R.POST("/api/checks/add", handlers.AddChecksHandler(r.DB))
 
 	r.R.PUT("/api/admin/ticket-duration", handlers.UpdateTicketDurationHandler(r.DB))
 }
