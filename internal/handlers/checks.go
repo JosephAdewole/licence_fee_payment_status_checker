@@ -51,11 +51,5 @@ func AddChecksHandler(db *gorm.DB) func(c *gin.Context) {
 			return
 		}
 
-		er = db.Model(&database.Subscriber{}).Where("plate_number=?", req.PlateNumber).FirstOrCreate(&database.Subscriber{
-			PlateNumber: req.PlateNumber}).Error
-		if er != nil {
-			httperror.Default(er).ReplyInternalServerError(c.Writer)
-			return
-		}
 	}
 }

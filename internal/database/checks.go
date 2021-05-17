@@ -11,13 +11,20 @@ import (
 type Check struct {
 	ID             uint      `json:"id" gorm:"primary_key"`
 	IsEmpty        bool      `json:"is_empty"`
-	PlateNumber    string    `json:"plate_number"`
-	PackingSpaceID uint       `json:"packing_space_id"`
+	PlateNumber    string    `json:"plate_number" gorm:"uniqueIndex"`
+	PackingSpaceID uint      `json:"packing_space_id"`
 	CreatedAt      time.Time `json:"created_at"`
 }
 
-//Add adds a new check record to database
-func (ck Check) Add(db *gorm.DB) error {
+//AddUpdate adds a new check record to database
+func (ck Check) AddUpdate(db *gorm.DB) error {
+
+	num := db.Model(&Check{}).Where("plate_number=?", ck.PlateNumber).Create(&ck)
+
+	if num.RowsAffected < int64(1) {
+		num.Update(&ck)
+	}
+
 	return db.Create(&ck).Error
 }
 
