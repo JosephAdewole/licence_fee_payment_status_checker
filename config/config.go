@@ -23,7 +23,7 @@ func LoadConfig(path string) (CONFIG, error) {
 	viper.SetConfigType("env")
 
 	var config CONFIG
-	//viper.AutomaticEnv()   //reads environmental variables and overrides those in .env
+	viper.AutomaticEnv() //reads environmental variables and overrides those in .env
 	err := viper.ReadInConfig()
 	if err != nil {
 		return CONFIG{}, err

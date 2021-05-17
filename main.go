@@ -5,7 +5,6 @@ import (
 	"mawakif/config"
 	"mawakif/internal/handlers"
 	"mawakif/internal/router"
-	"os"
 )
 
 func main() {
@@ -18,13 +17,12 @@ func main() {
 
 	db, cancelFunc, er := handlers.Connect(handlers.ConnectionString(cfg))
 	if er != nil {
-		log.Println(er.Error())
+		log.Printf("failed to connect to database :%v\n", er.Error())
 		return
 	}
 	defer cancelFunc()
 
 	myRouter := router.New(cfg, db)
 	myRouter.Route()
-	port := ":" + os.Getenv("PORT")
-	myRouter.Run(port)
+	myRouter.Run(cfg.PORT)
 }
