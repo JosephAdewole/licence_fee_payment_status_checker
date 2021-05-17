@@ -12,7 +12,7 @@ type Check struct {
 	ID             uint      `json:"id" gorm:"primary_key"`
 	IsEmpty        bool      `json:"is_empty"`
 	PlateNumber    string    `json:"plate_number"`
-	PackingSpaceID int       `json:"packing_space_id"`
+	PackingSpaceID uint       `json:"packing_space_id"`
 	CreatedAt      time.Time `json:"created_at"`
 }
 
