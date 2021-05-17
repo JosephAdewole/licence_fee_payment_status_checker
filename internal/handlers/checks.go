@@ -75,7 +75,7 @@ func AddChecksHandler(db *gorm.DB) func(c *gin.Context) {
 			return
 		}
 
-		httpresp.Default([]interface{}{ck, sub}).ReplyCreated(c.Writer)
+		httpresp.Default(map[string]interface{}{"checks": ck, "subscription": sub}).ReplyCreated(c.Writer)
 
 	}
 }
