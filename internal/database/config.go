@@ -25,3 +25,8 @@ func (c Config) AddUpdate(db *gorm.DB) error {
 
 	return nil
 }
+
+//Get gets the value from database
+func (c *Config) Get(db *gorm.DB) error {
+	return db.Model(&Config{}).Where("name=?", c.Name).First(c).Error
+}

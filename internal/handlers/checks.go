@@ -35,6 +35,7 @@ type addChecksRequest struct {
 //AddChecksHandler accepts check log and stores to database
 func AddChecksHandler(db *gorm.DB) func(c *gin.Context) {
 	return func(c *gin.Context) {
+
 		var req addChecksRequest
 		if er := json.NewDecoder(c.Request.Body).Decode(&req); er != nil {
 			httperror.Default(er).ReplyBadRequest(c.Writer)

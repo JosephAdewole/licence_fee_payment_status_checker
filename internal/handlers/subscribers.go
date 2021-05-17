@@ -5,6 +5,7 @@ import (
 	"mawakif/internal/database"
 	"mawakif/pkg/httperror"
 	"mawakif/pkg/httpresp"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -69,6 +70,20 @@ func GetAllSubscribersHandler(db *gorm.DB) func(c *gin.Context) {
 		if er != nil {
 			httperror.Default(er).ReplyInternalServerError(c.Writer)
 			return
+		}
+
+		ticketDuration := database.Config{Name: "TICKET_DURATION"}
+		_ = ticketDuration.Get(db)
+
+		tme, _ := strconv.Atoi(ticketDuration.Value)
+
+		for i, v := range subscribers {
+			k := time.Duration(tme) * time.Hour
+			if time.Now().After(v.StartTime.Add(k)) {
+				subscribers[i].Status = false
+				subscriber.AddUpdate(db)
+			}
+
 		}
 
 		httpresp.Default(subscribers).ReplyOK(c.Writer)
