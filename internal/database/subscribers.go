@@ -8,11 +8,10 @@ import (
 
 //Subscriber represents a packing space user, in this case a customer
 type Subscriber struct {
-	ID             uint      `json:"id" gorm:"primary_key"`
-	PlateNumber    string    `json:"plate_number"`
-	PackingSpaceID uint      `json:"packing_space_id"`
-	StartTime      time.Time `json:"start_time"`
-	Status         bool      `json:"status"`
+	ID          uint      `json:"id" gorm:"primary_key"`
+	PlateNumber string    `json:"plate_number"`
+	StartTime   time.Time `json:"start_time"`
+	Status      bool      `json:"status"`
 }
 
 //Add adds a new subcriber to database

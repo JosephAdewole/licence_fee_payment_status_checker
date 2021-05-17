@@ -5,6 +5,7 @@ import (
 	"mawakif/internal/database"
 	"mawakif/pkg/httperror"
 	"mawakif/pkg/httpresp"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -25,6 +26,10 @@ func GetAllChecksHandler(db *gorm.DB) func(c *gin.Context) {
 }
 
 type addChecksRequest struct {
+	plateNumber  string    `json:"plate_number"`
+	plateSpaceID string    `json:"packing_space_id"`
+	currentTime  time.Time `json:"current_time"`
+	IsEmpty      bool      `json:"is_empty"`
 }
 
 //AddChecksHandler accepts check log and stores to database
@@ -37,6 +42,17 @@ func AddChecksHandler(db *gorm.DB) func(c *gin.Context) {
 		}
 
 		er := db.Model(&database.Check{}).Create(&req).Error
+		if er != nil {
+			httperror.Default(er).ReplyInternalServerError(c.Writer)
+			return
+		}
+
+		if req.IsEmpty {
+			return
+		}
+
+		er = db.Model(&database.Subscriber{}).Where("plate_number=?", req.plateNumber).Save(&database.Subscriber{
+			PlateNumber: req.plateNumber}).Error
 		if er != nil {
 			httperror.Default(er).ReplyInternalServerError(c.Writer)
 			return
