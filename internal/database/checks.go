@@ -23,10 +23,12 @@ func (ck *Check) AddUpdate(db *gorm.DB) error {
 
 	if num.RowsAffected < int64(1) {
 		e := db.Model(&Check{}).Where("plate_number = ?", ck.PlateNumber).UpdateColumn(ck)
+		db.Model(&Check{}).Where("plate_number = ?", ck.PlateNumber).First(ck)
 		if e.Error != nil {
 			return e.Error
 		}
 	}
+	db.Model(&Check{}).Where("plate_number = ?", ck.PlateNumber).First(ck)
 
 	return nil
 }

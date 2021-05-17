@@ -16,10 +16,13 @@ func (c *Config) AddUpdate(db *gorm.DB) error {
 
 	if num.RowsAffected < int64(1) {
 		e := db.Model(&Subscriber{}).Where("name = ?", c.Name).UpdateColumn(c)
+		db.Model(&Subscriber{}).Where("name = ?", c.Name).First(c)
 		if e.Error != nil {
 			return e.Error
 		}
 	}
+
+	db.Model(&Subscriber{}).Where("name = ?", c.Name).First(c)
 
 	return nil
 }

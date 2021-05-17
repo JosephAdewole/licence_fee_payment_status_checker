@@ -15,10 +15,13 @@ func (ps *PackingSpace) AddUpdate(db *gorm.DB) error {
 
 	if num.RowsAffected < int64(1) {
 		e := db.Model(&Subscriber{}).Where("id = ?", ps.ID).UpdateColumn(ps)
+		db.Model(&Subscriber{}).Where("id = ?", ps.ID).First(ps)
 		if e.Error != nil {
 			return e.Error
 		}
 	}
+
+	db.Model(&Subscriber{}).Where("id = ?", ps.ID).First(ps)
 
 	return nil
 }
