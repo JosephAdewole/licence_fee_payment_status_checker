@@ -27,6 +27,8 @@ func (sub Subscriber) AddUpdate(db *gorm.DB) error {
 		}
 	}
 
+	num.Where("plate_number = ?", sub.PlateNumber).First(&sub)
+
 	return num.Error
 }
 
