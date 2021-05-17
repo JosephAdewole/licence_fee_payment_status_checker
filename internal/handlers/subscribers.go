@@ -9,13 +9,14 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/jinzhu/gorm"
 )
 
 type subscribersRequest struct {
-	PlateNumber string    `json:"plate_number"`
-	Status      bool      `json:"status"`
-	CurrentTime time.Time `json:"current_time"`
+	PlateNumber string    `json:"plate_number" validate:"require"`
+	Status      bool      `json:"status" validate:"required"`
+	CurrentTime time.Time `json:"current_time" validate:"required"`
 }
 
 //AddUpdateSubscriberHandler add a new subscriber or updates an existing one
@@ -24,6 +25,11 @@ func AddUpdateSubscriberHandler(db *gorm.DB) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var req subscribersRequest
 		if er := json.NewDecoder(c.Request.Body).Decode(&req); er != nil {
+			httperror.Default(er).ReplyBadRequest(c.Writer)
+			return
+		}
+
+		if er := validator.New().Struct(req); er != nil {
 			httperror.Default(er).ReplyBadRequest(c.Writer)
 			return
 		}
