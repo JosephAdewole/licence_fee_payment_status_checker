@@ -21,13 +21,10 @@ func (sub *Subscriber) AddUpdate(db *gorm.DB) error {
 
 	if num.RowsAffected < int64(1) {
 		e := db.Model(&Subscriber{}).Where("plate_number = ?", sub.PlateNumber).UpdateColumn(sub)
-		//	db.Model(&Subscriber{}).Where("plate_number = ?", sub.PlateNumber).First(sub)
 		if e.Error != nil {
 			return e.Error
 		}
 	}
-
-	//	num.Where("plate_number = ?", sub.PlateNumber).First(sub)
 
 	return nil
 }

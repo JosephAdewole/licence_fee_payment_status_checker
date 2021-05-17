@@ -17,17 +17,14 @@ type Check struct {
 }
 
 //AddUpdate adds a new check record to database
-func (ck Check) AddUpdate(db *gorm.DB) error {
+func (ck *Check) AddUpdate(db *gorm.DB) error {
 
-	num := db.Model(&Check{}).Where("plate_number=?", ck.PlateNumber).Update(&ck)
-	if e := num.Error; e != nil {
-		return e
-	}
+	num := db.Model(&Check{}).Create(ck)
 
 	if num.RowsAffected < int64(1) {
-		num.Create(&ck)
-		if e := num.Error; e != nil {
-			return e
+		e := db.Model(&Check{}).Where("plate_number = ?", ck.PlateNumber).UpdateColumn(ck)
+		if e.Error != nil {
+			return e.Error
 		}
 	}
 

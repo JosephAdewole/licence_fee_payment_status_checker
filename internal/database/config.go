@@ -10,16 +10,14 @@ type Config struct {
 }
 
 //AddUpdate adds or updates a config record in database
-func (c Config) AddUpdate(db *gorm.DB) error {
-	num := db.Model(&Config{}).Where("name=?", c.Name).Update(&c)
-	if e := num.Error; e != nil {
-		return e
-	}
+func (c *Config) AddUpdate(db *gorm.DB) error {
+
+	num := db.Model(&Config{}).Create(c)
 
 	if num.RowsAffected < int64(1) {
-		num.Create(&c)
-		if e := num.Error; e != nil {
-			return e
+		e := db.Model(&Subscriber{}).Where("name = ?", c.Name).UpdateColumn(c)
+		if e.Error != nil {
+			return e.Error
 		}
 	}
 

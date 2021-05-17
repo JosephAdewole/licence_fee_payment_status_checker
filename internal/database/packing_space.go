@@ -9,17 +9,14 @@ type PackingSpace struct {
 }
 
 //AddUpdate adds or updates a packing spot/slot in database tables
-func (ps PackingSpace) AddUpdate(db *gorm.DB) error {
+func (ps *PackingSpace) AddUpdate(db *gorm.DB) error {
 
-	num := db.Model(&PackingSpace{}).Where("id=?", ps.ID).Update(&ps)
-	if e := num.Error; e != nil {
-		return e
-	}
+	num := db.Model(&PackingSpace{}).Create(ps)
 
 	if num.RowsAffected < int64(1) {
-		num.Create(&ps)
-		if e := num.Error; e != nil {
-			return e
+		e := db.Model(&Subscriber{}).Where("id = ?", ps.ID).UpdateColumn(ps)
+		if e.Error != nil {
+			return e.Error
 		}
 	}
 
