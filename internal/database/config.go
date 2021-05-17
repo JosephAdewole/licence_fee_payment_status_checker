@@ -11,10 +11,10 @@ type Config struct {
 
 //Add adds a new config record to database
 func (c Config) Add(db *gorm.DB) error {
-	return nil
+	return db.Model(&c).Create(c).Error
 }
 
 //Update updates the record of a configuration in a database
 func (c Config) Update(db *gorm.DB) error {
-	return nil
+	return db.Model(&c).Update(c).Error
 }

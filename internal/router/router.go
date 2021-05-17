@@ -16,8 +16,8 @@ type router struct {
 }
 
 //New creates a new router instance
-func New(cfg config.CONFIG) router {
-	return router{DB: nil, //temperal
+func New(cfg config.CONFIG, db *gorm.DB) router {
+	return router{DB: db, //temperal
 		R:      gin.New(),
 		CONFIG: cfg} //config- temperal
 }

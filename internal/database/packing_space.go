@@ -10,11 +10,12 @@ type PackingSpace struct {
 
 //Add adds a packing spot/slot to database tables
 func (ps PackingSpace) Add(db *gorm.DB) error {
-
-	return nil
+	return db.Create(&ps).Error
 }
 
 //GetAll returns a list of all the packing space/slots stored in database
 func (ps PackingSpace) GetAll(db *gorm.DB) ([]PackingSpace, error) {
-	return nil, nil
+	var pss []PackingSpace
+	er := db.Model(&ps).Find(&pss).Error
+	return pss, er
 }

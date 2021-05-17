@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"mawakif/config"
+	"mawakif/internal/handlers"
 	"mawakif/internal/router"
 	"os"
 )
@@ -14,7 +15,15 @@ func main() {
 		log.Println(err.Error())
 		return
 	}
-	myRouter := router.New(cfg)
+
+	db, cancelFunc, er := handlers.Connect(handlers.ConnectionString(cfg))
+	if er != nil {
+		log.Println(er.Error())
+		return
+	}
+	defer cancelFunc()
+
+	myRouter := router.New(cfg, db)
 	myRouter.Route()
 	port := ":" + os.Getenv("PORT")
 	myRouter.Run(port)

@@ -17,12 +17,13 @@ type Subscriber struct {
 
 //Add adds a new subcriber to database
 func (sub Subscriber) Add(db *gorm.DB) error {
-
-	return nil
+	return db.Model(&sub).Create(sub).Error
 }
 
 //GetAll returns a list of all subcribers from the database
 func (sub Subscriber) GetAll(db *gorm.DB) ([]Subscriber, error) {
+	var subs []Subscriber
+	er := db.Model(&sub).Find(&subs).Error
 
-	return nil, nil
+	return subs, er
 }

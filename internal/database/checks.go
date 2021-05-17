@@ -18,11 +18,12 @@ type Check struct {
 
 //Add adds a new check record to database
 func (ck Check) Add(db *gorm.DB) error {
-	return nil
+	return db.Create(&ck).Error
 }
 
 //GetAll returns all the checks done
 func (ck Check) GetAll(db *gorm.DB) ([]Check, error) {
-
-	return nil, nil
+	var cks []Check
+	er := db.Model(&ck).Find(&cks).Error
+	return cks, er
 }
