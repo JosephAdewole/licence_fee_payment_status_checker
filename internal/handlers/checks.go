@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/jinzhu/gorm"
 )
 
@@ -26,10 +27,10 @@ func GetAllChecksHandler(db *gorm.DB) func(c *gin.Context) {
 }
 
 type addChecksRequest struct {
-	PlateNumber    string    `json:"plate_number"`
-	PackingSpaceID uint      `json:"packing_space_id"`
-	CurrentTime    time.Time `json:"current_time"`
-	IsEmpty        bool      `json:"is_empty"`
+	PlateNumber    string    `json:"plate_number" validate:"required"`
+	PackingSpaceID uint      `json:"packing_space_id" validate:"required"`
+	CurrentTime    time.Time `json:"current_time" validate:"required"`
+	IsEmpty        bool      `json:"is_empty" validate:"required"`
 }
 
 //AddChecksHandler accepts check log and stores to database
@@ -38,6 +39,11 @@ func AddChecksHandler(db *gorm.DB) func(c *gin.Context) {
 
 		var req addChecksRequest
 		if er := json.NewDecoder(c.Request.Body).Decode(&req); er != nil {
+			httperror.Default(er).ReplyBadRequest(c.Writer)
+			return
+		}
+
+		if er := validator.New().Struct(req); er != nil {
 			httperror.Default(er).ReplyBadRequest(c.Writer)
 			return
 		}
