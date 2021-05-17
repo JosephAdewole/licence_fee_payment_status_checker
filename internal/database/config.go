@@ -4,7 +4,7 @@ import "github.com/jinzhu/gorm"
 
 //Config is a record of a configuration
 type Config struct {
-	ID    int    `json:"id"`
+	ID    int    `json:"id" gorm:"primary_key"`
 	Name  string `json:"name"`
 	Value string `json:"value"`
 }

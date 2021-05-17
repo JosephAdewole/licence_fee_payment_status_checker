@@ -8,7 +8,7 @@ import (
 
 //Subscriber represents a packing space user, in this case a customer
 type Subscriber struct {
-	ID             int       `json:"id"`
+	ID             int       `json:"id" gorm:"primary_key"`
 	PlateNumber    string    `json:"plate_number"`
 	PackingSpaceID int       `json:"packing_space_id"`
 	StartTime      time.Time `json:"start_time"`
