@@ -21,8 +21,11 @@ func (sub Subscriber) AddUpdate(db *gorm.DB) error {
 		return e
 	}
 
+	num.Where("plate_number=?", sub.PlateNumber).First(&sub)
+
 	if num.RowsAffected < int64(1) {
 		num.Create(&sub)
+		num.Where("plate_number=?", sub.PlateNumber).First(&sub)
 		if e := num.Error; e != nil {
 			return e
 		}
