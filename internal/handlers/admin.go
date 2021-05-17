@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"mawakif/internal/database"
@@ -49,13 +48,9 @@ func UpdateTicketDurationHandler(db *gorm.DB) func(c *gin.Context) {
 
 		//update database
 		conf := database.Config{Name: "TICKET_DURATION", Value: req.string()}
-		if err := conf.Update(db); err == sql.ErrNoRows {
-			if er := conf.Add(db); er != nil {
-				httperror.Default(err).ReplyInternalServerError(c.Writer)
-				return
-			}
-		} else if err != nil {
-			httperror.Default(err).ReplyInternalServerError(c.Writer)
+
+		if er := db.Save(&database.Config{}).Error; er != nil {
+			httperror.Default(er).ReplyInternalServerError(c.Writer)
 			return
 		}
 

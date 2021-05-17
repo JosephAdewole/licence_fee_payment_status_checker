@@ -39,11 +39,11 @@ func AddPlateNumberHandler(db *gorm.DB) func(c *gin.Context) {
 		stat := true
 		curTime := time.Now()
 
-		input := subscribersRequest{PlateNumber: req.PlateNumber,
+		subscriber := subscribersRequest{PlateNumber: req.PlateNumber,
 			Status:      stat,
 			CurrentTime: curTime}
 
-		subscriber, er := addUpdateSubscribers(input, db)
+		er := db.Save(&subscriber).Error
 		if er != nil {
 			httperror.Default(er).ReplyInternalServerError(c.Writer)
 			return
