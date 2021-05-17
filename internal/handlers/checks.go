@@ -30,7 +30,7 @@ type addChecksRequest struct {
 	PlateNumber    string    `json:"plate_number"`
 	PackingSpaceID uint      `json:"packing_space_id" validate:"required"`
 	CurrentTime    time.Time `json:"current_time" validate:"required"`
-	IsEmpty        bool      `json:"is_empty" validate:"required"`
+	IsEmpty        bool      `json:"is_empty"`
 }
 
 //AddChecksHandler accepts check log and stores to database
