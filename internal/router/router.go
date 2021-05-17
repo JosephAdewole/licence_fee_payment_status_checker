@@ -24,6 +24,7 @@ func New(cfg config.CONFIG, db *gorm.DB) router {
 
 //Route routes the different requests
 func (r router) Route() {
+
 	r.R.Use(Cors)
 	//starts a new router
 	r.R.GET("/api/subscribers", handlers.GetAllSubscribersHandler(r.DB))
