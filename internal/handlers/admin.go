@@ -49,7 +49,7 @@ func UpdateTicketDurationHandler(db *gorm.DB) func(c *gin.Context) {
 		//update database
 		conf := database.Config{Name: "TICKET_DURATION", Value: req.string()}
 
-		if er := db.Model(&database.Config{}).Where("name=?", conf.Name).FirstOrCreate(&conf).Error; er != nil {
+		if er := conf.AddUpdate(db); er != nil {
 			httperror.Default(er).ReplyInternalServerError(c.Writer)
 			return
 		}

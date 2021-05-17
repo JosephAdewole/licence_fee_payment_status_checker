@@ -9,12 +9,19 @@ type Config struct {
 	Value string `json:"value"`
 }
 
-//Add adds a new config record to database
-func (c Config) Add(db *gorm.DB) error {
-	return db.Model(&c).Create(c).Error
-}
+//AddUpdate adds or updates a config record in database
+func (c Config) AddUpdate(db *gorm.DB) error {
+	num := db.Model(&Config{}).Where("name=?", c.Name).Create(&c)
+	if e := num.Error; e != nil {
+		return e
+	}
 
-//Update updates the record of a configuration in a database
-func (c Config) Update(db *gorm.DB) error {
-	return db.Model(&c).Update(c).Error
+	if num.RowsAffected < int64(1) {
+		num.Update(&c)
+		if e := num.Error; e != nil {
+			return e
+		}
+	}
+
+	return nil
 }

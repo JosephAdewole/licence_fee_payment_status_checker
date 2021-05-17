@@ -20,12 +20,18 @@ type Check struct {
 func (ck Check) AddUpdate(db *gorm.DB) error {
 
 	num := db.Model(&Check{}).Where("plate_number=?", ck.PlateNumber).Create(&ck)
+	if e := num.Error; e != nil {
+		return e
+	}
 
 	if num.RowsAffected < int64(1) {
 		num.Update(&ck)
+		if e := num.Error; e != nil {
+			return e
+		}
 	}
 
-	return db.Create(&ck).Error
+	return nil
 }
 
 //GetAll returns all the checks done
