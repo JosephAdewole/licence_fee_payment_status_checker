@@ -20,16 +20,16 @@ func (sub Subscriber) AddUpdate(db *gorm.DB) error {
 	num := db.Model(&Subscriber{}).Create(&sub)
 
 	if num.RowsAffected < int64(1) {
-		num.UpdateColumn(&sub)
-		num.Where("plate_number = ?", sub.PlateNumber).First(&sub)
-		if e := num.Error; e != nil {
-			return e
+		e := db.Model(&Subscriber{}).UpdateColumn(&sub)
+		db.Model(&Subscriber{}).Where("plate_number = ?", sub.PlateNumber).First(&sub)
+		if e.Error != nil {
+			return e.Error
 		}
 	}
 
 	num.Where("plate_number = ?", sub.PlateNumber).First(&sub)
 
-	return num.Error
+	return nil
 }
 
 //GetAll returns a list of all subcribers from the database
