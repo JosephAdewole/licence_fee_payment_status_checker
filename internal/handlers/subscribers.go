@@ -30,7 +30,7 @@ func AddUpdateSubscriberHandler(db *gorm.DB) func(c *gin.Context) {
 		}
 
 		if er := validator.New().Struct(req); er != nil {
-			httperror.Default(er).ReplyBadRequest(c.Writer)
+			httperror.Default(er.(validator.ValidationErrors)).ReplyBadRequest(c.Writer)
 			return
 		}
 

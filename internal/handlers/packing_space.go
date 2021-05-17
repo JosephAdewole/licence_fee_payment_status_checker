@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"mawakif/internal/database"
 	"mawakif/pkg/httperror"
 	"mawakif/pkg/httpresp"
@@ -29,25 +30,46 @@ type addPackingSpaceRequest struct {
 	Designation string `json:"designation"`
 }
 
+func (a addPackingSpaceRequest) validate() error {
+	if a.ID == 0 {
+		return errors.New("id is required")
+	}
+
+	if a.Designation == "" {
+		return errors.New("designation is required")
+	}
+
+	return nil
+}
+
 //AddPackingSpaceHandler adds new packing spaces
 func AddPackingSpaceHandler(db *gorm.DB) func(c *gin.Context) {
 	return func(c *gin.Context) {
 
-		prksp := database.PackingSpace{}
+		var req addPackingSpaceRequest
 
-		err := json.NewDecoder(c.Request.Body).Decode(&prksp)
+		err := json.NewDecoder(c.Request.Body).Decode(&req)
 		if err != nil {
 			httperror.Default(err).ReplyBadRequest(c.Writer)
 			return
 		}
 
+		if er := req.validate(); er != nil {
+			httperror.Default(err).ReplyBadRequest(c.Writer)
+			return
+		}
 
-		er := prksp.AddUpdate(db)
+		pks := database.PackingSpace{
+			ID:          req.ID,
+			Designation: req.Designation,
+		}
+
+		er := pks.AddUpdate(db)
 		if er != nil {
 			httperror.Default(err).ReplyInternalServerError(c.Writer)
 			return
 		}
 
-		httpresp.Default(prksp).ReplyOK(c.Writer)
+		httpresp.Default(pks).ReplyOK(c.Writer)
 	}
 }
