@@ -14,9 +14,21 @@ type Subscriber struct {
 	Status      bool      `json:"status"`
 }
 
-//Add adds a new subcriber to database
-func (sub Subscriber) Add(db *gorm.DB) error {
-	return db.Model(&sub).Where("plate_number=?", sub.PlateNumber).Create(sub).Error
+//AddUpdate adds or update subcriber record to database
+func (sub Subscriber) AddUpdate(db *gorm.DB) error {
+	num := db.Model(&Subscriber{}).Where("plate_number=?", sub.PlateNumber).Update(&sub)
+	if e := num.Error; e != nil {
+		return e
+	}
+
+	if num.RowsAffected < int64(1) {
+		num.Create(&sub)
+		if e := num.Error; e != nil {
+			return e
+		}
+	}
+
+	return nil
 }
 
 //GetAll returns a list of all subcribers from the database

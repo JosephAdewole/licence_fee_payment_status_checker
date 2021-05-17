@@ -4,13 +4,26 @@ import "github.com/jinzhu/gorm"
 
 //PackingSpace represents a single packing spot
 type PackingSpace struct {
-	ID          uint    `json:"id" gorm:"primary_key"`
+	ID          uint   `json:"id" gorm:"primary_key"`
 	Designation string `json:"designation"`
 }
 
-//Add adds a packing spot/slot to database tables
-func (ps PackingSpace) Add(db *gorm.DB) error {
-	return db.Create(&ps).Error
+//AddUpdate adds or updates a packing spot/slot in database tables
+func (ps PackingSpace) AddUpdate(db *gorm.DB) error {
+
+	num := db.Model(&PackingSpace{}).Where("id=?", ps.ID).Update(&ps)
+	if e := num.Error; e != nil {
+		return e
+	}
+
+	if num.RowsAffected < int64(1) {
+		num.Create(&ps)
+		if e := num.Error; e != nil {
+			return e
+		}
+	}
+
+	return nil
 }
 
 //GetAll returns a list of all the packing space/slots stored in database

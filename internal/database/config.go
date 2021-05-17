@@ -11,13 +11,13 @@ type Config struct {
 
 //AddUpdate adds or updates a config record in database
 func (c Config) AddUpdate(db *gorm.DB) error {
-	num := db.Model(&Config{}).Where("name=?", c.Name).Create(&c)
+	num := db.Model(&Config{}).Where("name=?", c.Name).Update(&c)
 	if e := num.Error; e != nil {
 		return e
 	}
 
 	if num.RowsAffected < int64(1) {
-		num.Update(&c)
+		num.Create(&c)
 		if e := num.Error; e != nil {
 			return e
 		}

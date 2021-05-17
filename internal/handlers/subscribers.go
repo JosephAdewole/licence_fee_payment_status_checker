@@ -52,7 +52,7 @@ func addUpdateSubscribers(req subscribersRequest, db *gorm.DB) (database.Subscri
 		Status:      req.Status,
 		StartTime:   strtTime}
 
-	if er := subscriber.Add(db); er != nil {
+	if er := subscriber.AddUpdate(db); er != nil {
 		return database.Subscriber{}, er
 	}
 

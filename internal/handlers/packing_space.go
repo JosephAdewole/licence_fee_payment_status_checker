@@ -33,20 +33,20 @@ type addPackingSpaceRequest struct {
 func AddPackingSpaceHandler(db *gorm.DB) func(c *gin.Context) {
 	return func(c *gin.Context) {
 
-		prksps := []database.PackingSpace{}
+		prksp := database.PackingSpace{}
 
-		err := json.NewDecoder(c.Request.Body).Decode(&prksps)
+		err := json.NewDecoder(c.Request.Body).Decode(&prksp)
 		if err != nil {
+			httperror.Default(err).ReplyBadRequest(c.Writer)
+			return
+		}
+
+		er := prksp.AddUpdate(db)
+		if er != nil {
 			httperror.Default(err).ReplyInternalServerError(c.Writer)
 			return
 		}
 
-		er := db.FirstOrCreate(prksps).Error
-		if er != nil {
-			httperror.Default(er).ReplyInternalServerError(c.Writer)
-			return
-		}
-
-		httpresp.Default(prksps).ReplyOK(c.Writer)
+		httpresp.Default(prksp).ReplyOK(c.Writer)
 	}
 }

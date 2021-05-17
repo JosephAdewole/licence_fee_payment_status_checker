@@ -26,10 +26,10 @@ func GetAllChecksHandler(db *gorm.DB) func(c *gin.Context) {
 }
 
 type addChecksRequest struct {
-	PlateNumber  string    `json:"plate_number"`
-	PlateSpaceID string    `json:"packing_space_id"`
-	CurrentTime  time.Time `json:"current_time"`
-	IsEmpty      bool      `json:"is_empty"`
+	PlateNumber    string    `json:"plate_number"`
+	PackingSpaceID uint      `json:"packing_space_id"`
+	CurrentTime    time.Time `json:"current_time"`
+	IsEmpty        bool      `json:"is_empty"`
 }
 
 //AddChecksHandler accepts check log and stores to database
@@ -41,15 +41,34 @@ func AddChecksHandler(db *gorm.DB) func(c *gin.Context) {
 			return
 		}
 
-		er := db.Model(&database.Check{}).Create(&req).Error
+		ck := database.Check{
+			PlateNumber:    req.PlateNumber,
+			PackingSpaceID: req.PackingSpaceID,
+			CreatedAt:      req.CurrentTime,
+			IsEmpty:        req.IsEmpty,
+		}
+		er := ck.AddUpdate(db)
 		if er != nil {
-			httperror.Default(er).ReplyInternalServerError(c.Writer)
+			httperror.Default(er).ReplyBadRequest(c.Writer)
 			return
 		}
 
 		if req.IsEmpty {
 			return
 		}
+
+		sub := database.Subscriber{
+			PlateNumber: req.PlateNumber,
+		}
+
+		err := sub.AddUpdate(db)
+
+		if err != nil {
+			httperror.Default(err).ReplyInternalServerError(c.Writer)
+			return
+		}
+
+		httpresp.Default([]interface{}{ck, sub}).ReplyCreated(c.Writer)
 
 	}
 }
