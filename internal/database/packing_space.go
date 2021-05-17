@@ -4,7 +4,7 @@ import "github.com/jinzhu/gorm"
 
 //PackingSpace represents a single packing spot
 type PackingSpace struct {
-	ID          uint   `json:"id" gorm:"primary_key"`
+	ID          uint   `json:"id" gorm:"uniqueIndex"`
 	Designation string `json:"designation"`
 }
 
