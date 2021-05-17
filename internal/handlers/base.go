@@ -24,3 +24,4 @@ func Connect(connectionString string) (*gorm.DB, func(), error) {
 
 	return db, cls, nil
 }
+
