@@ -41,12 +41,11 @@ func AddPackingSpaceHandler(db *gorm.DB) func(c *gin.Context) {
 			return
 		}
 
-		er := db.Save(prksps).Error
+		er := db.FirstOrCreate(prksps).Error
 		if er != nil {
 			httperror.Default(er).ReplyInternalServerError(c.Writer)
 			return
 		}
-		
 
 		httpresp.Default(prksps).ReplyOK(c.Writer)
 	}

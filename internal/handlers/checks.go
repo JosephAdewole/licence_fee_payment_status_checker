@@ -26,9 +26,9 @@ func GetAllChecksHandler(db *gorm.DB) func(c *gin.Context) {
 }
 
 type addChecksRequest struct {
-	plateNumber  string    `json:"plate_number"`
-	plateSpaceID string    `json:"packing_space_id"`
-	currentTime  time.Time `json:"current_time"`
+	PlateNumber  string    `json:"plate_number"`
+	PlateSpaceID string    `json:"packing_space_id"`
+	CurrentTime  time.Time `json:"current_time"`
 	IsEmpty      bool      `json:"is_empty"`
 }
 
@@ -51,8 +51,8 @@ func AddChecksHandler(db *gorm.DB) func(c *gin.Context) {
 			return
 		}
 
-		er = db.Model(&database.Subscriber{}).Where("plate_number=?", req.plateNumber).Save(&database.Subscriber{
-			PlateNumber: req.plateNumber}).Error
+		er = db.Model(&database.Subscriber{}).Where("plate_number=?", req.PlateNumber).FirstOrCreate(&database.Subscriber{
+			PlateNumber: req.PlateNumber}).Error
 		if er != nil {
 			httperror.Default(er).ReplyInternalServerError(c.Writer)
 			return
