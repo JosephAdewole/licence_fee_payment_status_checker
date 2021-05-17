@@ -12,7 +12,7 @@ import (
 
 type plateNumberRequest struct {
 	PlateNumber    string    `json:"plate_number"`
-	PackingSpaceID int       `json:"packing_space_id"`
+	PackingSpaceID uint      `json:"packing_space_id"`
 	CurrentTime    time.Time `json:"current_time"`
 	IsEmpty        bool      `json:"is_empty"`
 }
