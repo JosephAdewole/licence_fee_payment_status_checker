@@ -17,11 +17,11 @@ type Subscriber struct {
 //AddUpdate adds or update subcriber record to database
 func (sub Subscriber) AddUpdate(db *gorm.DB) error {
 
-	num := db.Model(&Subscriber{}).Where("plate_number=?", sub.PlateNumber).Create(sub)
+	num := db.Model(&Subscriber{}).Where(" plate_number= ?", sub.PlateNumber).Create(sub)
 
 	if num.RowsAffected < int64(1) {
 		num.UpdateColumn(&sub)
-		num.Where("plate_number=?", sub.PlateNumber).First(&sub)
+		num.Where("plate_number = ?", sub.PlateNumber).First(&sub)
 		if e := num.Error; e != nil {
 			return e
 		}
