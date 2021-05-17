@@ -6,6 +6,7 @@ import (
 	"mawakif/internal/database"
 	"mawakif/internal/handlers"
 	"mawakif/internal/router"
+	"os"
 )
 
 func main() {
@@ -25,10 +26,12 @@ func main() {
 
 	myRouter := router.New(cfg, db)
 	myRouter.Route()
-	myRouter.Run(cfg.PORT)
+	port := ":" + os.Getenv("PORT")
+	myRouter.Run(port)
 }
 
 func init() {
+
 	cfg, err := config.LoadConfig(".")
 	if err != nil {
 		log.Println(err.Error())
@@ -46,4 +49,5 @@ func init() {
 	db.AutoMigrate(&database.Config{})
 	db.AutoMigrate(&database.PackingSpace{})
 	db.AutoMigrate(&database.Subscriber{})
+
 }

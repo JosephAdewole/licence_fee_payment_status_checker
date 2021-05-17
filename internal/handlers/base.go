@@ -5,11 +5,13 @@ import (
 	"mawakif/config"
 
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 //ConnectionString returns a string for database connection
 func ConnectionString(cfg config.CONFIG) string {
-	return fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local", cfg.DBUser, cfg.DBPassWord, cfg.DBName)
+	//return cfg.DBConnectionString
+	return fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", cfg.DBUser, cfg.DBPassWord, cfg.DBHost, cfg.DBName)
 }
 
 //Connect returns a connection pointer to database
@@ -24,4 +26,3 @@ func Connect(connectionString string) (*gorm.DB, func(), error) {
 
 	return db, cls, nil
 }
-
