@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/jinzhu/gorm"
+	"github.com/pkg/errors"
 )
 
 //GetAllChecksHandler gets alls the  checks done by the robot
@@ -39,7 +40,7 @@ func AddChecksHandler(db *gorm.DB) func(c *gin.Context) {
 
 		var req addChecksRequest
 		if er := json.NewDecoder(c.Request.Body).Decode(&req); er != nil {
-			httperror.Default(er).ReplyBadRequest(c.Writer)
+			httperror.Default(errors.Wrap(er, "unable to decode json")).ReplyBadRequest(c.Writer)
 			return
 		}
 
@@ -70,7 +71,6 @@ func AddChecksHandler(db *gorm.DB) func(c *gin.Context) {
 		}
 
 		err := sub.AddUpdate(db)
-
 		if err != nil {
 			httperror.Default(err).ReplyInternalServerError(c.Writer)
 			return
