@@ -61,6 +61,7 @@ func AddChecksHandler(db *gorm.DB) func(c *gin.Context) {
 		}
 
 		if req.IsEmpty {
+			httpresp.Default(map[string]interface{}{"checks": ck}).ReplyCreated(c.Writer)
 			return
 		}
 
