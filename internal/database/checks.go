@@ -10,8 +10,8 @@ import (
 //Check is record of a check done by bot (rasp berry pi robot)
 type Check struct {
 	ID             uint      `json:"id" gorm:"primary_key"`
-	IsEmpty        *bool     `json:"is_empty"`
-	PlateNumber    *string   `json:"plate_number"`
+	IsEmpty        bool      `json:"is_empty"`
+	PlateNumber    string    `json:"plate_number"`
 	PackingSpaceID uint      `json:"packing_space_id" gorm:"uniqueIndex"`
 	CreatedAt      time.Time `json:"created_at"`
 }
