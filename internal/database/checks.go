@@ -22,13 +22,13 @@ func (ck *Check) AddUpdate(db *gorm.DB) error {
 	num := db.Model(&Check{}).Create(ck)
 
 	if num.RowsAffected < int64(1) {
-		e := db.Model(&Check{}).Where("plate_number = ?", ck.PlateNumber).UpdateColumn(ck)
-		db.Model(&Check{}).Where("plate_number = ?", ck.PlateNumber).First(ck)
+		e := db.Model(&Check{}).Where("packing_space_id = ?", ck.PackingSpaceID).UpdateColumn(ck)
+		db.Model(&Check{}).Where("packing_space_id = ?", ck.PackingSpaceID).First(ck)
 		if e.Error != nil {
 			return e.Error
 		}
 	}
-	db.Model(&Check{}).Where("plate_number = ?", ck.PlateNumber).First(ck)
+	db.Model(&Check{}).Where("packing_space_id = ?", ck.PackingSpaceID).First(ck)
 
 	return nil
 }
