@@ -50,10 +50,10 @@ func AddChecksHandler(db *gorm.DB) func(c *gin.Context) {
 		}
 
 		ck := database.Check{
-			PlateNumber:    &req.PlateNumber,
+			PlateNumber:    req.PlateNumber,
 			PackingSpaceID: req.PackingSpaceID,
 			CreatedAt:      req.CurrentTime,
-			IsEmpty:        &req.IsEmpty,
+			IsEmpty:        req.IsEmpty,
 		}
 		er := ck.AddUpdate(db)
 		if er != nil {

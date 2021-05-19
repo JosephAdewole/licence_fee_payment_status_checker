@@ -10,8 +10,8 @@ import (
 //Check is record of a check done by bot (rasp berry pi robot)
 type Check struct {
 	ID             uint      `json:"id" gorm:"primary_key"`
-	IsEmpty        bool      `json:"is_empty"`
-	PlateNumber    string    `json:"plate_number"`
+	IsEmpty        *bool     `json:"is_empty"`
+	PlateNumber    *string   `json:"plate_number"`
 	PackingSpaceID uint      `json:"packing_space_id" gorm:"uniqueIndex"`
 	CreatedAt      time.Time `json:"created_at"`
 }
@@ -19,7 +19,7 @@ type Check struct {
 //AddUpdate adds a new check record to database
 func (ck *Check) AddUpdate(db *gorm.DB) error {
 
-	num := db.Model(&Check{}).Where("packing_space_id = ?", ck.PackingSpaceID).UpdateColumns(ck)
+	num := db.Model(&Check{}).Where("packing_space_id = ?", ck.PackingSpaceID).Update(map[string]interface{}{"is_empty": ck.IsEmpty, "plate_number": ck.PlateNumber, "packing_space_id": ck.PackingSpaceID, "created_at": ck.CreatedAt})
 
 	if num.RowsAffected < int64(1) {
 		e := db.Model(&Check{}).Create(ck)
