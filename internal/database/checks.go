@@ -19,10 +19,9 @@ type Check struct {
 //AddUpdate adds a new check record to database
 func (ck *Check) AddUpdate(db *gorm.DB) error {
 
-	num := db.Model(&Check{}).Where("packing_space_id = ?", ck.PackingSpaceID).Update(ck)
+	num := db.Model(&Check{}).Where("packing_space_id = ?", ck.PackingSpaceID).UpdateColumns(ck)
 
 	if num.RowsAffected < int64(1) {
-
 		e := db.Model(&Check{}).Create(ck)
 		db.Model(&Check{}).Where("packing_space_id = ?", ck.PackingSpaceID).First(ck)
 		if e.Error != nil {
